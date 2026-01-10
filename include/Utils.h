@@ -21,6 +21,11 @@ public:
     // 隨機浮點數產生 [0, 1]
     static double getRandomDouble();
 
+    // 獲取靜態隨機數引擎的引用
+    static std::mt19937& getGenerator() {
+        return g_gen;
+    }
+
 private:
     // 靜態隨機數引擎，避免在函數內反覆建立物件導致隨機性失效
     static std::mt19937 g_gen;
