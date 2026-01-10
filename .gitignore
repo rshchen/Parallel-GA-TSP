@@ -1,32 +1,27 @@
-# Prerequisites
-*.d
+# ==============================================================================
+# Build / Compiled Artifacts
+# ==============================================================================
+build/
+bin/
+out/
+[Bb]uild/
+[Bb]in/
 
 # Compiled Object files
-*.slo
-*.lo
 *.o
 *.obj
+*.slo
+*.lo
+*.glo
 
 # Precompiled Headers
 *.gch
 *.pch
 
-# Linker files
-*.ilk
-
-# Debugger Files
-*.pdb
-
-# Compiled Dynamic libraries
+# Compiled Dynamic / Static Libraries
 *.so
 *.dylib
 *.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
 *.lai
 *.la
 *.a
@@ -36,6 +31,53 @@
 *.exe
 *.out
 *.app
+*.i*86
+*.x86_64
+*.hex
 
-# debug information files
+# Debug Information
 *.dwo
+*.pdb
+*.ilk
+*.exp
+
+# ==============================================================================
+# Build System (CMake / Make)
+# ==============================================================================
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake_install.cmake
+Makefile
+install_manifest.txt
+compile_commands.json
+
+# Visual Studio generated files
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.suo
+*.db
+*.opendb
+.vs/
+
+# ==============================================================================
+# IDE / Editors
+# ==============================================================================
+.vscode/
+.history/
+.idea/
+*.swp
+*~
+
+# ==============================================================================
+# OS Generated Files
+# ==============================================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
