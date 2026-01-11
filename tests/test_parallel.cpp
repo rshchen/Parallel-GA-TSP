@@ -12,8 +12,8 @@ int main() {
     // 2. 效能評估 (Performance)：測量 std::async 帶來的加速倍率。
     // 3. 記憶體安全：驗證 std::ref 是否正確將結果寫回原始 Individual 物件。
 
-    const int CITY_COUNT = 2000;     // 城市數量
-    const int POP_SIZE = 5000;      // 族群大小 (任務總量)
+    const int CITY_COUNT = 5000;     // 城市數量
+    const int POP_SIZE = 20000;      // 族群大小 (任務總量)
     
     std::cout << "--- Parallel Evaluator Unit Test ---" << std::endl;
     std::cout << "Config: City Count = " << CITY_COUNT << ", Population Size = " << POP_SIZE << std::endl;
