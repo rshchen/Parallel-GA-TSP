@@ -19,13 +19,17 @@ void GASolver::initPopulation() {
 
     for (auto& ind : m_population) {
         ind.path.resize(n);
-        // 產生 [0, 1, 2, ..., n-1] 的序列
+        // 1. 產生 [0, 1, 2, ..., n-1] 的序列
         std::iota(ind.path.begin(), ind.path.end(), 0);
-        // 隨機打亂路徑
+        // 2. 隨機打亂路徑
         std::shuffle(ind.path.begin(), ind.path.end(), Utils::getGenerator());
-        // 初始計算適應度
-        evaluateIndividual(ind);
+        
+        // --- 這裡不再呼叫 evaluateIndividual(ind) ---
     }
+
+    // 3. 【關鍵】初始化完畢後，統一進行第一次評估
+    // 這樣可以保證進入 solve() 的第一個迴圈時，大家都有分數了
+    m_evaluator.evaluate(m_population, m_distMatrix, m_config.cityCount, m_config.useParallel);
 }
 
 void GASolver::evaluateIndividual(Individual& ind) {
@@ -111,59 +115,54 @@ Individual GASolver::selectionTournament() {
 }
 
 Individual GASolver::solve() {
-    // 1. 初始化族群
-    initPopulation();
+    // 1. 初始化族群並完成第一代評估
+    initPopulation(); 
 
-    // 用來記錄全域最佳解
-    Individual bestEver;
-    bestEver.distance = 1e18;
+    // 初始化 bestEver 為第一代中的最強者
+    // (因為 initPopulation 最後已經呼叫過 evaluate，所以這裡可以安全排序)
+    std::sort(m_population.begin(), m_population.end());
+    Individual bestEver = m_population[0];
 
     for (int gen = 0; gen < m_config.generations; ++gen) {
-        // 2. 評估與排序 (由小到大，距離短的在前)
-        // 這裡使用 std::sort，它會調用在 Types.h 定義的 operator<
-        std::sort(m_population.begin(), m_population.end());
-
-        // 更新全域最佳解
-        if (m_population[0].distance < bestEver.distance) {
-            bestEver = m_population[0];
-            std::cout << "Generation " << gen << ": Best Distance = " << bestEver.distance << std::endl;
-        }
-
-        // 3. 準備下一代族群
+        
+        // --- A. 產生下一代 ---
         std::vector<Individual> nextPopulation;
         nextPopulation.reserve(m_config.populationSize);
 
-        // --- A. 精英保留 (Elitism) ---
-        // 直接把最強的前幾個個體複製到下一代，保證優良基因不遺失
-        int elitismCount = std::max(1, (int)(m_config.populationSize * 0.05)); // 預設保留 5%
+        // 精英保留 (5%)
+        int elitismCount = std::max(1, (int)(m_config.populationSize * 0.05));
         for (int i = 0; i < elitismCount; ++i) {
             nextPopulation.push_back(m_population[i]);
         }
 
-        // --- B. 繁衍下一代 (Reproduction) ---
+        // 繁衍 (Crossover & Mutation)
         while (nextPopulation.size() < m_config.populationSize) {
-            // 選擇父母
-            Individual parent1 = selectionTournament();
-            Individual parent2 = selectionTournament();
-
-            // 交配 (Crossover)
-            Individual child = crossoverOX(parent1, parent2);
-
-            // 突變 (Mutation)
+            Individual p1 = selectionTournament();
+            Individual p2 = selectionTournament();
+            Individual child = crossoverOX(p1, p2);
             mutate(child);
-
-            // 計算新個體的適應度
-            evaluateIndividual(child);
-
             nextPopulation.push_back(child);
         }
 
-        // 4. 族群更迭
+        // --- B. 族群更迭 ---
         m_population = std::move(nextPopulation);
+
+        // --- C. 統一平行評估 ---
+        // 這裡負責計算這一代所有新小孩的距離
+        m_evaluator.evaluate(m_population, m_distMatrix, m_config.cityCount, m_config.useParallel);
+
+        // --- D. 排序與記錄 ---
+        std::sort(m_population.begin(), m_population.end());
+        if (m_population[0].distance < bestEver.distance) {
+            bestEver = m_population[0];
+            // 建議加一個代數標記，方便觀察收斂速度
+            std::cout << "[Gen " << gen << "] New Best Distance: " << bestEver.distance << std::endl;
+        }
     }
 
     return bestEver;
 }
+
 
 Individual GASolver::getBestIndividual() const {
     if (m_population.empty()) {

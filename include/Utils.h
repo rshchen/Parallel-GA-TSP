@@ -18,8 +18,8 @@ public:
     // 隨機整數產生 [min, max]
     static int getRandomInt(int min, int max);
 
-    // 隨機浮點數產生 [0, 1]
-    static double getRandomDouble();
+    // 加上 min 和 max 參數，預設值分別為 0.0 和 1.0
+    static double getRandomDouble(double min = 0.0, double max = 1.0);
 
     // 獲取靜態隨機數引擎的引用
     static std::mt19937& getGenerator() {

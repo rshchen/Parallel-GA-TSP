@@ -44,7 +44,10 @@ int Utils::getRandomInt(int min, int max) {
     return dist(g_gen);
 }
 
-double Utils::getRandomDouble() {
-    std::uniform_real_distribution<double> dist(0.0, 1.0);
-    return dist(g_gen);
+double Utils::getRandomDouble(double min, double max) {
+    // 根據傳入的參數決定分佈區間
+    std::uniform_real_distribution<double> dist(min, max);
+    
+    // 使用你原本定義好的 g_gen (隨機數引擎)
+    return dist(getGenerator()); 
 }

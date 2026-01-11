@@ -2,6 +2,7 @@
 #define GASOLVER_H
 
 #include "Types.h"
+#include "ParallelEvaluator.h"
 #include <vector>
 
 /**
@@ -78,6 +79,8 @@ private:
 
     /** @brief 當前代數的族群集合 */
     std::vector<Individual> m_population;
+
+    ParallelEvaluator m_evaluator;
 };
 
 #endif

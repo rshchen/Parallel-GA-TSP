@@ -47,6 +47,7 @@ struct GAConfig {
     double mutationRate;    // 突變機率 p_m = 1/n
     int tournamentSize;     // 錦標賽競爭人數 k ≈ 5% P
     int eliteCount;         // 精英保留人數 (建議 2-5%)
+    bool useParallel;      // 是否啟用並行評估
 
     /**
      * @brief 靜態工廠方法：根據城市數量自動生成優化參數
