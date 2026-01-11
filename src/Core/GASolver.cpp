@@ -136,7 +136,7 @@ Individual GASolver::solve() {
         }
 
         // 繁衍 (Crossover & Mutation)
-        while (nextPopulation.size() < m_config.populationSize) {
+        while (nextPopulation.size() < static_cast<size_t>(m_config.populationSize)) {
             Individual p1 = selectionTournament();
             Individual p2 = selectionTournament();
             Individual child = crossoverOX(p1, p2);
@@ -153,10 +153,19 @@ Individual GASolver::solve() {
 
         // --- D. 排序與記錄 ---
         std::sort(m_population.begin(), m_population.end());
+
+        // 【新增：Memetic 優化】對當代最強者進行 2-Opt 拋光
+        // 這樣可以確保傳入下一代的精英是經過局部微調後的完美版本
+        apply2Opt(m_population[0]);
+
         if (m_population[0].distance < bestEver.distance) {
             bestEver = m_population[0];
             // 建議加一個代數標記，方便觀察收斂速度
-            std::cout << "[Gen " << gen << "] New Best Distance: " << bestEver.distance << std::endl;
+            //std::cout << "[Gen " << gen << "] New Best Distance: " << bestEver.distance << std::endl;
+        }
+        // 每 100 代印一個點，讓你知道它還在跑
+        if (gen % 100 == 0) {
+            std::cout << "." << std::flush;
         }
     }
 
@@ -171,4 +180,39 @@ Individual GASolver::getBestIndividual() const {
     }
     // 傳回目前排序第一名的個體
     return m_population[0];
+}
+
+
+
+void GASolver::apply2Opt(Individual& ind) {
+    bool improved = true;
+    int n = m_config.cityCount;
+
+    while (improved) {
+        improved = false;
+        for (int i = 1; i < n - 2; ++i) {
+            for (int j = i + 1; j < n - 1; ++j) {
+                // 使用 1D 索引公式: row * n + col
+                int idx_i_prev = ind.path[i - 1];
+                int idx_i = ind.path[i];
+                int idx_j = ind.path[j];
+                int idx_j_next = ind.path[j + 1];
+
+                // 計算交換前的兩條邊距離
+                double oldDist = m_distMatrix[idx_i_prev * n + idx_i] + 
+                                m_distMatrix[idx_j * n + idx_j_next];
+                
+                // 計算交換後的兩條邊距離
+                double newDist = m_distMatrix[idx_i_prev * n + idx_j] + 
+                                m_distMatrix[idx_i * n + idx_j_next];
+
+                if (newDist < oldDist) {
+                    // 執行子路徑翻轉 (i 到 j 之間的部分)
+                    std::reverse(ind.path.begin() + i, ind.path.begin() + j + 1);
+                    ind.distance -= (oldDist - newDist);
+                    improved = true;
+                }
+            }
+        }
+    }
 }

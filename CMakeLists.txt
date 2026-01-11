@@ -35,9 +35,11 @@ target_link_libraries(test_ga PRIVATE ga_solver_lib Threads::Threads)
 add_executable(test_parallel tests/test_parallel.cpp)
 target_link_libraries(test_parallel PRIVATE ga_solver_lib Threads::Threads)
 
-# 新增：TSPLIB Parser 的單元測試 (稍後你會用到)
 add_executable(test_parser tests/test_parser.cpp)
 target_link_libraries(test_parser PRIVATE ga_solver_lib Threads::Threads)
+
+add_executable(test_tsplib_benchmark tests/test_tsplib_benchmark.cpp)
+target_link_libraries(test_tsplib_benchmark PRIVATE ga_solver_lib Threads::Threads)
 
 # 設定編譯優化 (Release 模式下開啟 -O3)
 if(NOT CMAKE_BUILD_TYPE)

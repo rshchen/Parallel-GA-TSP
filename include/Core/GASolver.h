@@ -66,6 +66,8 @@ private:
      */
     void mutate(Individual& ind);
 
+    void apply2Opt(Individual& ind);
+
     // --- 私有成員變數 (內部狀態) ---
 
     /** @brief 演算法參數配置 (唯讀) */
