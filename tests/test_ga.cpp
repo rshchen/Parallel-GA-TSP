@@ -4,6 +4,7 @@
 #include <iomanip>
 #include "Core/GASolver.h"
 #include "Core/Types.h"
+#include "TestUtils.h"
 
 int main() {
     // --- 測試目的說明 ---
@@ -31,10 +32,13 @@ int main() {
     config.tournamentSize = 5;      // 錦標賽選擇強度
     config.useParallel = true;      // 【關鍵】開啟並行化評估模式
 
+    // --- 2. 注入 Callback ---
+    // 因為只有 100 代，我們設定每 10 代印一個點，讓測試過程有動態感
+    config.onGenerationComplete = GATestUtils::getDotsCallback(10);
+    // ------------------------
+
     std::cout << "Configuration: " << std::endl;
-    std::cout << "- Population Size: " << config.populationSize << std::endl;
-    std::cout << "- Generations    : " << config.generations << std::endl;
-    std::cout << "- Parallel Mode  : " << (config.useParallel ? "ON" : "OFF") << std::endl;
+    std::cout << "- Parallel Mode: " << (config.useParallel ? "ON" : "OFF") << std::endl;
 
     // 3. 建立求解器並啟動計時
     GASolver solver(config, cities);
@@ -42,7 +46,7 @@ int main() {
     std::cout << "\nStarting evolution..." << std::endl;
     
     auto startTime = std::chrono::high_resolution_clock::now();
-    Individual bestResult = solver.solve();
+    Individual bestResult = solver.solve(); // 這裡會自動觸發 Callback 印出點點
     auto endTime = std::chrono::high_resolution_clock::now();
     
     std::chrono::duration<double> duration = endTime - startTime;

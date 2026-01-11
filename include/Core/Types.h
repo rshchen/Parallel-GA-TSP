@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
+#include <functional>
 
 /**
  * @brief 城市基礎資料結構
@@ -48,6 +49,8 @@ struct GAConfig {
     int tournamentSize;     // 錦標賽競爭人數 k ≈ 5% P
     int eliteCount;         // 精英保留人數 (建議 2-5%)
     bool useParallel;      // 是否啟用並行評估
+    // 定義 Callback 格式：(當前代數, 當前最佳距離)
+    std::function<void(int, double)> onGenerationComplete = nullptr;
 
     /**
      * @brief 靜態工廠方法：根據城市數量自動生成優化參數
@@ -56,24 +59,18 @@ struct GAConfig {
     static GAConfig generateDefault(int n) {
         GAConfig config;
         config.cityCount = n;
-        
-        // P ≈ 4n, 且設定下限確保多樣性
         config.populationSize = std::max(100, 4 * n);
-        
-        // G ≈ 100n
         config.generations = 100 * n;
-        
         config.crossoverRate = 0.85;
-        
-        // 核心法則：期望突變次數為 1
         config.mutationRate = 1.0 / static_cast<double>(n);
         
-        // k ≈ 5% P
-        config.tournamentSize = std::max(2, static_cast<int>(0.05 * config.populationSize));
-        
-        // 精英保留 ≈ 2-5%
+        // 【修正重點】簡單化：不再使用 5% P，而是固定小規模
+        // 理由：GA + 2-Opt 的核心在於「弱選擇壓力」以維持多樣性
+        // 設定在 3 ~ 5 之間是最穩健的，不論族群多大
+        config.tournamentSize = 3; 
+
         config.eliteCount = std::max(1, static_cast<int>(0.03 * config.populationSize));
-        
+        config.useParallel = true;
         return config;
     }
 };

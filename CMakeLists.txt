@@ -41,6 +41,8 @@ target_link_libraries(test_parser PRIVATE ga_solver_lib Threads::Threads)
 add_executable(test_tsplib_benchmark tests/test_tsplib_benchmark.cpp)
 target_link_libraries(test_tsplib_benchmark PRIVATE ga_solver_lib Threads::Threads)
 
+target_include_directories(test_tsplib_benchmark PRIVATE tests)
+
 # 設定編譯優化 (Release 模式下開啟 -O3)
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)

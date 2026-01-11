@@ -160,12 +160,10 @@ Individual GASolver::solve() {
 
         if (m_population[0].distance < bestEver.distance) {
             bestEver = m_population[0];
-            // 建議加一個代數標記，方便觀察收斂速度
-            //std::cout << "[Gen " << gen << "] New Best Distance: " << bestEver.distance << std::endl;
         }
-        // 每 100 代印一個點，讓你知道它還在跑
-        if (gen % 100 == 0) {
-            std::cout << "." << std::flush;
+        // 呼叫 Callback，讓外部決定要做什麼
+        if (m_config.onGenerationComplete) {
+            m_config.onGenerationComplete(gen, bestEver.distance);
         }
     }
 

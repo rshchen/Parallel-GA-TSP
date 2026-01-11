@@ -7,6 +7,7 @@
 #include <map>
 #include "Parser/TSPLIBParser.h"
 #include "Core/GASolver.h"
+#include "TestUtils.h"
 
 struct Stats {
     double best;
@@ -28,39 +29,38 @@ void runBenchmark(const std::string& name, const std::string& path, double optim
     
     auto cities = TSPLIBParser::parse(path);
     
+    
     GAConfig config;
     config.cityCount = cities.size();
-    config.populationSize = 1000; // 增加到 1000，確保基因多樣性
-    config.generations = 2000;    // 增加到 2000 代，給它足夠時間收斂
-    config.mutationRate = 0.10;   // 提高突變率到 10%
-    config.tournamentSize = 3;   // 錦標賽
-    config.useParallel = true; // 開啟平行加速
+    config.populationSize = 1500; // 針對大型問題加強
+    config.generations = 3000;    // 增加收斂時間
+    config.mutationRate = 0.15;   // 增加跳出局部解的機會
+    config.tournamentSize = 3;    // 配合 2-Opt 的弱選擇壓力
+    config.useParallel = true;
+
+    // === 使用 TestUtils 優化後的 Callback 設定 ===
+    // 直接呼叫工廠函式，產生每 100 代印點點的行為
+    config.onGenerationComplete = GATestUtils::getDotsCallback(100);
+    // ===========================================
 
     std::vector<double> results;
     std::vector<double> times;
 
     for (int i = 0; i < runs; ++i) {
-    // 1. 顯示當前進度
-    std::cout << "  > Progress: Run " << i + 1 << "/" << runs << " " << std::flush;
-    
-    GASolver solver(config, cities);
-    
-    // 2. 開始計時
-    auto start = std::chrono::high_resolution_clock::now();
-    
-    // 3. 執行運算 (solve 內部會印出點點)
-    Individual res = solver.solve();
-    
-    // 4. 結束計時
-    auto end = std::chrono::high_resolution_clock::now();
-    
-    // 5. 計算並記錄結果
-    double duration = std::chrono::duration<double>(end - start).count();
-    results.push_back(res.distance);
-    times.push_back(duration); // 關鍵：存入時間向量
-    
-    std::cout << " Done! Best: " << std::fixed << std::setprecision(2) 
-              << res.distance << " (" << duration << "s)" << std::endl;
+        std::cout << "  > Progress: Run " << i + 1 << "/" << runs << " " << std::flush;
+        
+        GASolver solver(config, cities);
+        
+        auto start = std::chrono::high_resolution_clock::now();
+        Individual res = solver.solve(); // solve 內部現在會觸發上面的 Lambda
+        auto end = std::chrono::high_resolution_clock::now();
+        
+        double duration = std::chrono::duration<double>(end - start).count();
+        results.push_back(res.distance);
+        times.push_back(duration);
+        
+        std::cout << " Done! Best: " << std::fixed << std::setprecision(2) 
+                  << res.distance << " (" << duration << "s)" << std::endl;
     }
 
     // 跑完後印出一個簡單的列表，方便分析
@@ -73,6 +73,7 @@ void runBenchmark(const std::string& name, const std::string& path, double optim
     double sum = std::accumulate(results.begin(), results.end(), 0.0);
     double mean = sum / runs;
     double stdDev = calculateStdDev(results, mean);
+    double cv = (mean != 0) ? (stdDev / mean) * 100.0 : 0.0; // 計算 CV %
     double gap = ((best - optimalDist) / optimalDist) * 100.0;
     double avgTime = std::accumulate(times.begin(), times.end(), 0.0) / runs;
 
@@ -82,6 +83,7 @@ void runBenchmark(const std::string& name, const std::string& path, double optim
     std::cout << "  Optimality Gap: " << gap << "%" << std::endl;
     std::cout << "  Mean Distance : " << mean << std::endl;
     std::cout << "  Std Deviation : " << stdDev << std::endl;
+    std::cout << "  CV (Stability) : " << std::fixed << std::setprecision(2) << cv << "%" << std::endl; 
     std::cout << "  Avg Exec Time : " << avgTime << "s" << std::endl;
     std::cout << "-----------------------------------------------" << std::endl;
 }
