@@ -1,8 +1,8 @@
 #ifndef GASOLVER_H
 #define GASOLVER_H
 
-#include "Types.h"
-#include "ParallelEvaluator.h"
+#include "Core/Types.h"
+#include "Core/ParallelEvaluator.h"
 #include <vector>
 
 /**

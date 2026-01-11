@@ -3,8 +3,8 @@
 #include <chrono>
 #include <cmath>
 #include <algorithm>
-#include "ParallelEvaluator.h"
-#include "Types.h"
+#include "Core/ParallelEvaluator.h"
+#include "Core/Types.h"
 
 int main() {
     // --- 測試目的說明 ---

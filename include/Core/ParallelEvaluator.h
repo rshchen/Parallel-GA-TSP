@@ -1,7 +1,7 @@
 #ifndef PARALLEL_EVALUATOR_H
 #define PARALLEL_EVALUATOR_H
 
-#include "Types.h"
+#include "Core/Types.h"
 #include <vector>
 
 class ParallelEvaluator {

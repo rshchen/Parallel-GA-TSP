@@ -2,8 +2,8 @@
 #include <vector>
 #include <chrono>
 #include <iomanip>
-#include "GASolver.h"
-#include "Types.h"
+#include "Core/GASolver.h"
+#include "Core/Types.h"
 
 int main() {
     // --- 測試目的說明 ---

@@ -2,9 +2,9 @@
 #include <vector>
 #include <chrono>
 #include <iomanip>
-#include "GASolver.h"
-#include "Types.h"
-#include "Utils.h"
+#include "Core/GASolver.h"
+#include "Core/Types.h"
+#include "Core/Utils.h"
 
 /**
  * @brief 產生隨機城市資料

@@ -1,5 +1,5 @@
-#include "GASolver.h"
-#include "Utils.h"
+#include "Core/GASolver.h"
+#include "Core/Utils.h"
 #include <algorithm>
 #include <numeric>
 #include <cmath>
