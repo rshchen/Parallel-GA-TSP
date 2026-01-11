@@ -20,7 +20,9 @@ int main() {
 
     try {
         // 配置測試路徑 (相對路徑需依據執行檔執行位置調整)
-        std::string path = "../data/tsplib/berlin52.tsp";
+        // 舊寫法：std::string path = "../data/tsplib/berlin52.tsp";
+        // 新寫法：
+        std::string path = std::string(TSPLIB_DATA_DIR) + "berlin52.tsp";
         
         // 執行解析
         auto cities = TSPLIBParser::parse(path);

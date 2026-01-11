@@ -101,7 +101,8 @@ int main() {
     std::cout << "===============================================" << std::endl;
 
     for (auto const& [name, optimal] : targets) {
-        std::string path = "../data/tsplib/" + name + ".tsp";
+        // TSPLIB_DATA_DIR 會被編譯器替換成 CMake 抓到的絕對路徑字串
+        std::string path = std::string(TSPLIB_DATA_DIR) + name + ".tsp";
         try {
             runBenchmark(name, path, optimal, 10); 
         } catch (const std::exception& e) {

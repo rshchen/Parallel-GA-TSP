@@ -12,6 +12,9 @@ find_package(Threads REQUIRED)
 # 使用 include_directories(include) 代表程式碼內需寫 #include "Core/GASolver.h"
 include_directories(include)
 
+# 注入絕對路徑定義 (解決路徑問題的專業解法)
+add_definitions(-DTSPLIB_DATA_DIR="${CMAKE_SOURCE_DIR}/data/tsplib/")
+
 # 1. 建立核心演算法與解析器靜態庫
 # 更新路徑至 src/Core 和 src/Parser
 add_library(ga_solver_lib STATIC 
@@ -42,6 +45,8 @@ add_executable(test_tsplib_benchmark tests/test_tsplib_benchmark.cpp)
 target_link_libraries(test_tsplib_benchmark PRIVATE ga_solver_lib Threads::Threads)
 
 target_include_directories(test_tsplib_benchmark PRIVATE tests)
+
+
 
 # 設定編譯優化 (Release 模式下開啟 -O3)
 if(NOT CMAKE_BUILD_TYPE)

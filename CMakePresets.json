@@ -2,11 +2,11 @@
   "version": 3,
   "configurePresets": [
     {
-      "name": "default",
-      "displayName": "Default Config",
-      "description": "Standard build with Ninja or Make",
+      "name": "debug",
+      "displayName": "Debug Config",
+      "description": "Build with debug symbols",
       "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build",
+      "binaryDir": "${sourceDir}/build/debug",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug"
       }
@@ -16,11 +16,10 @@
       "displayName": "Release Config",
       "description": "Optimized build for performance",
       "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build",
+      "binaryDir": "${sourceDir}/build/release",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
     }
   ]
 }
-
