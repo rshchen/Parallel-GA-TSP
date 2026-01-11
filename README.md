@@ -72,33 +72,30 @@
 
 ## 建構與執行 (Build & Usage)
 
-專案支援 CMake 3.19+ 的 Preset 工作流。
+本專案採用現代化 C++ 開發工作流，支援 CMake 3.19+ 與 **Ninja** 高速建構系統。
 
-### 1. 配置與編譯 (Release 模式)
+### 1. 環境需求 (Prerequisites)
+* **編譯器**：支援 C++17 之編譯器 (如 GCC 9+, Clang 10+, 或 MSVC 2019+)。
+* **建構工具**：[CMake](https://cmake.org/) (3.19+) 與 [Ninja](https://ninja-build.org/) (推薦使用，以獲得最佳編譯速度)。
+
+### 2. 配置與編譯 (Build)
+本專案支援 CMake Presets。建議使用 Release 模式進行建構，以確保標竿測試數據的準確性。
+
 ```bash
-# 配置環境
-cmake --preset release
+# 1. 配置環境 (使用 Ninja 作為生成器)
+cmake --preset release -G Ninja
 
-# 執行建構
+# 2. 執行建構
 cmake --build build/release
 
-```
-
-### 2. 執行標竿測試
-
-```bash
+# 3. 執行程式 (Execution)
+# 編譯完成後，可以透過以下指令執行標竿測試或範例程式：
+# 執行 TSPLIB 標準測項標竿測試
 ./build/release/test_tsplib_benchmark
 
-```
-
-### 3. 執行範例程式
-
-```bash
+# 執行一般 TSP 求解範例
 ./build/release/tsp_solver
-
 ```
-
----
 
 ## 專案結構 (Project Structure)
 
