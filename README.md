@@ -7,7 +7,7 @@
 ## 技術亮點 (Technical Highlights)
 
 * **混合演化架構 (Memetic Algorithm)**：結合遺傳演算法 (GA) 與 2-Opt 局部搜尋，解決純 GA 在大型問題（如 n > 100）收斂速度過慢且容易陷入局部最優的問題。
-* **非同步任務平行化**：利用 std::async 實現任務導向的平行評估 (Task-based Parallelism)，在多核環境下達成約 7x 的加速比。
+* **非同步任務平行化**：利用 std::async 實現任務導向的平行評估 (Task-based Parallelism)，在多核環境下達成約 7.09x 的加速比。
 * **N-dependent 參數工程**：實作隨城市規模 n 動態調整的參數工廠，自動優化族群大小、突變率與錦標賽壓力，確保演算法的穩健性。
 * **現代化建構流程**：
     * 支援 CMake Presets (Debug/Release 獨立配置)。
@@ -35,11 +35,11 @@
 針對大規模運算場景進行壓力測試 (Stress Test)，驗證多核心 CPU 的利用效率。
 
 * **測試環境**：MacBook Air M2 (8-Core CPU)
-* **測試規模**：5,000 Cities / 20,000 Population
+* **測試規模**：2,000 Cities / 5,000 Population
 * **效能數據**：
-    * **序列模式 (Serial)**: 0.5649 s
-    * **並行模式 (Parallel)**: 0.0925 s
-    * **加速倍率 (Speedup Ratio)**: **6.10x**
+    * **序列模式 (Serial)**: 0.02616 s
+    * **並行模式 (Parallel)**: 0.00368 s
+    * **加速倍率 (Speedup Ratio)**: **7.09x**
 
 
 
@@ -99,7 +99,6 @@ cmake --build build/release
 
 ## 專案結構 (Project Structure)
 
-> **[請在此處插入截圖：VS Code 目錄樹截圖]**
 
 ```text
 Parallel-GA-TSP/
