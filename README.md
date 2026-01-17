@@ -33,7 +33,8 @@
 
 *註：*
 
-1. **Gap %**：計算參考自 TSPLIB 官方公佈之最佳已知解 (Best Known Solution)，計算公式為$\frac{\text{Best} - \text{Optimal}}{\text{Optimal}} \times 100\%$ 。
+1. **Gap %**：計算參考自 TSPLIB 官方公佈之最佳已知解 (Best Known Solution)，計算公式為
+$\frac{\text{Best} - \text{Optimal}}{\text{Optimal}} \times 100\%$ 。
 2. **CV % (變異係數)**：反映演算法在隨機種子變動下的穩定性，數值越低代表演算法越穩定。
 3. **平均耗時**：為 10 次測試之平均執行時間，展現了 C++ 實作在處理大規模路徑規劃時的高效能。
 
